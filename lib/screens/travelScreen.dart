@@ -10,6 +10,10 @@ class TravelScreen extends StatefulWidget {
 class _TravelScreenState extends State<TravelScreen>
     with TickerProviderStateMixin {
   TabController _tabController;
+  AnimationController _controller1;
+  AnimationController _controller2;
+  Animation<Offset> _animation1;
+  Animation<double> _animation2;
 
   @override
   void initState() {
@@ -17,6 +21,31 @@ class _TravelScreenState extends State<TravelScreen>
     _tabController = TabController(
       length: 4,
       vsync: this,
+    );
+    _tabController.addListener(() {
+      setState(() {});
+    });
+    _controller1 = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    )..forward();
+    _controller2 = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+      lowerBound: 0.9,
+    )..repeat(reverse: true);
+    _animation1 = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller1,
+        curve: Curves.easeIn,
+      ),
+    );
+    _animation2 = CurvedAnimation(
+      parent: _controller2,
+      curve: Curves.easeInBack,
     );
   }
 
@@ -90,30 +119,33 @@ class _TravelScreenState extends State<TravelScreen>
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 14.0),
-            child: RichText(
-              softWrap: true,
-              overflow: TextOverflow.clip,
-              text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: [
-                  TextSpan(
-                    text: "Hi, ",
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
+          SlideTransition(
+            position: _animation1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 14.0),
+              child: RichText(
+                softWrap: true,
+                overflow: TextOverflow.clip,
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: [
+                    TextSpan(
+                      text: "Hi, ",
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "Mano Vikram",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    TextSpan(
+                      text: "Mano Vikram",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -175,23 +207,58 @@ class _TravelScreenState extends State<TravelScreen>
                       labelColor: Colors.pinkAccent[100],
                       unselectedLabelColor: Colors.blueGrey[200],
                       labelPadding: EdgeInsets.all(16),
+                      onTap: (index) {
+                        setState(() {});
+                      },
                       tabs: [
-                        Icon(
-                          Icons.map,
-                          size: 30,
-                        ),
-                        Icon(
-                          Icons.pin_drop,
-                          size: 30,
-                        ),
-                        Icon(
-                          Icons.restaurant_menu,
-                          size: 30,
-                        ),
-                        Icon(
-                          Icons.person,
-                          size: 30,
-                        ),
+                        _tabController.index == 0
+                            ? ScaleTransition(
+                                scale: _animation2,
+                                child: Icon(
+                                  Icons.map,
+                                  size: 30,
+                                ),
+                              )
+                            : Icon(
+                                Icons.map,
+                                size: 30,
+                              ),
+                        _tabController.index == 1
+                            ? ScaleTransition(
+                                scale: _animation2,
+                                child: Icon(
+                                  Icons.pin_drop,
+                                  size: 30,
+                                ),
+                              )
+                            : Icon(
+                                Icons.pin_drop,
+                                size: 30,
+                              ),
+                        _tabController.index == 2
+                            ? ScaleTransition(
+                                scale: _animation2,
+                                child: Icon(
+                                  Icons.restaurant_menu,
+                                  size: 30,
+                                ),
+                              )
+                            : Icon(
+                                Icons.restaurant_menu,
+                                size: 30,
+                              ),
+                        _tabController.index == 3
+                            ? ScaleTransition(
+                                scale: _animation2,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 30,
+                                ),
+                              )
+                            : Icon(
+                                Icons.person,
+                                size: 30,
+                              ),
                       ],
                     ),
                     Expanded(
