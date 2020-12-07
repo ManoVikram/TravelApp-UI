@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import './screens/travelScreen.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.pink,
         accentColor: Colors.amber,
+        fontFamily: GoogleFonts.lato().fontFamily,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Travel(),
@@ -24,7 +28,9 @@ class _MyAppState extends State<MyApp> {
 class Travel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: TravelScreen(),
+    );
   }
 }
 
